@@ -1,0 +1,23 @@
+{
+    "name": "atico/spreadsheet-translator-exporter-yml",
+    "license": "MIT",
+    "type": "library",
+    "description": "Spreadsheet Translator - Library to export translation files into Yml file format",
+    "keywords": ["library to export translation files into yml file format"],
+    "autoload": {
+        "psr-4": {
+            "Atico\\SpreadsheetTranslator\\Exporter\\Yml\\": "./src"
+        }
+    },
+    "repositories": [{
+        "type": "path",
+        "url": "../../Core",
+        "options": {
+            "symlink": true
+        }
+    }],
+    "require": {
+        "atico/spreadsheet-translator-core": "^1.0",
+        "php": ">=5.5.9"
+    }
+}
