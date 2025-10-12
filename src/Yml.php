@@ -22,12 +22,12 @@ class Yml extends AbstractExporter implements ExporterInterface
         $this->configuration = new YmlExporterConfigurationManager($configuration);
     }
 
-    public function getFormat()
+    public function getFormat(): string
     {
         return 'yml';
     }
 
-    protected function buildContent(ExportContentInterface $exportContent)
+    protected function buildContent(ExportContentInterface $exportContent): string
     {
         $xliffBuilder = new YmlBuilder(
             $exportContent->getTranslations(),

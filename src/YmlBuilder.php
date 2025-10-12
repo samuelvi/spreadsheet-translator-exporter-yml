@@ -13,32 +13,27 @@ namespace Atico\SpreadsheetTranslator\Exporter\Yml;
 
 class YmlBuilder
 {
-    private $data;
-    private $nameSeparator;
-
-    function __construct($data, $nameSeparator)
+    function __construct(private array $data, private string $nameSeparator)
     {
-        $this->data = $data;
-        $this->nameSeparator = $nameSeparator;
     }
 
-    function buildDocument()
+    function buildDocument(): string
     {
-        $rows = array();
+        $rows = [];
         foreach ($this->data as $name => $value) {
 
-            $keys = explode($this->nameSeparator, $name);
+            $keys = explode($this->nameSeparator, (string) $name);
 
             foreach ($keys as $index => $key) {
-                $isLastKey = (count($keys) == ($index+1));
-                $padding = ($index==0)?'':str_pad(' ', $index*4);
+                $isLastKey = (count($keys) === $index + 1);
+                $padding = ($index === 0)?'':str_pad(' ', $index*4);
                 $rows[] = sprintf('%s%s: %s', $padding, $key, ($isLastKey)?'>':'');
                 if ($isLastKey) {
                     $padding = str_pad(' ', ($index+1)*4);
-                    $rows[] = sprintf('%s%s', $padding, str_replace(PHP_EOL, PHP_EOL . $padding, addslashes($value)));
+                    $rows[] = sprintf('%s%s', $padding, str_replace(PHP_EOL, PHP_EOL . $padding, addslashes((string) $value)));
                 }
             }
         }
-        return join(PHP_EOL, $rows);
+        return implode(PHP_EOL, $rows);
     }
 }
