@@ -24,21 +24,46 @@ class YmlBuilder
 
     function buildDocument()
     {
-        $rows = array();
+        // First, build a tree structure
+        $tree = array();
         foreach ($this->data as $name => $value) {
-
             $keys = explode($this->nameSeparator, $name);
+            $current = &$tree;
 
             foreach ($keys as $index => $key) {
-                $isLastKey = (count($keys) == ($index+1));
-                $padding = ($index==0)?'':str_pad(' ', $index*4);
-                $rows[] = sprintf('%s%s: %s', $padding, $key, ($isLastKey)?'>':'');
+                $isLastKey = (count($keys) == ($index + 1));
+
                 if ($isLastKey) {
-                    $padding = str_pad(' ', ($index+1)*4);
-                    $rows[] = sprintf('%s%s', $padding, str_replace(PHP_EOL, PHP_EOL . $padding, addslashes($value)));
+                    $current[$key] = $value;
+                } else {
+                    if (!isset($current[$key])) {
+                        $current[$key] = array();
+                    }
+                    $current = &$current[$key];
                 }
             }
         }
+
+        // Then render the tree as YAML
+        return $this->renderTree($tree, 0);
+    }
+
+    private function renderTree($tree, $level)
+    {
+        $rows = array();
+        $padding = str_pad('', $level * 4);
+
+        foreach ($tree as $key => $value) {
+            if (is_array($value)) {
+                $rows[] = sprintf('%s%s:', $padding, $key);
+                $rows[] = $this->renderTree($value, $level + 1);
+            } else {
+                $rows[] = sprintf('%s%s: >', $padding, $key);
+                $valuePadding = str_pad('', ($level + 1) * 4);
+                $rows[] = sprintf('%s%s', $valuePadding, str_replace(PHP_EOL, PHP_EOL . $valuePadding, addslashes($value)));
+            }
+        }
+
         return join(PHP_EOL, $rows);
     }
 }
