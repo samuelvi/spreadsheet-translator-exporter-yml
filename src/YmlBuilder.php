@@ -13,31 +13,26 @@ namespace Atico\SpreadsheetTranslator\Exporter\Yml;
 
 class YmlBuilder
 {
-    private $data;
-    private $nameSeparator;
-
-    function __construct($data, $nameSeparator)
+    function __construct(private $data, private $nameSeparator)
     {
-        $this->data = $data;
-        $this->nameSeparator = $nameSeparator;
     }
 
-    function buildDocument()
+    function buildDocument(): string
     {
         // First, build a tree structure
-        $tree = array();
+        $tree = [];
         foreach ($this->data as $name => $value) {
-            $keys = explode($this->nameSeparator, $name);
+            $keys = explode($this->nameSeparator, (string) $name);
             $current = &$tree;
 
             foreach ($keys as $index => $key) {
-                $isLastKey = (count($keys) == ($index + 1));
+                $isLastKey = (count($keys) === $index + 1);
 
                 if ($isLastKey) {
                     $current[$key] = $value;
                 } else {
                     if (!isset($current[$key])) {
-                        $current[$key] = array();
+                        $current[$key] = [];
                     }
                     $current = &$current[$key];
                 }
@@ -48,9 +43,9 @@ class YmlBuilder
         return $this->renderTree($tree, 0);
     }
 
-    private function renderTree($tree, $level)
+    private function renderTree(array $tree, int|float $level): string
     {
-        $rows = array();
+        $rows = [];
         $padding = str_pad('', $level * 4);
 
         foreach ($tree as $key => $value) {
@@ -60,10 +55,10 @@ class YmlBuilder
             } else {
                 $rows[] = sprintf('%s%s: >', $padding, $key);
                 $valuePadding = str_pad('', ($level + 1) * 4);
-                $rows[] = sprintf('%s%s', $valuePadding, str_replace(PHP_EOL, PHP_EOL . $valuePadding, addslashes($value)));
+                $rows[] = sprintf('%s%s', $valuePadding, str_replace(PHP_EOL, PHP_EOL . $valuePadding, addslashes((string) $value)));
             }
         }
 
-        return join(PHP_EOL, $rows);
+        return implode(PHP_EOL, $rows);
     }
 }
