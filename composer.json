@@ -11,10 +11,11 @@
     },
     "require": {
         "samuelvi/spreadsheet-translator-core": "^8.0",
-        "php": ">=8.1"
+        "php": ">=8.4"
     },
     "require-dev": {
         "rector/jack": "^0.2.9",
-        "rector/rector": "^2.1"
+        "rector/rector": "^2.1",
+        "phpunit/phpunit": "^11.2"
     }
 }

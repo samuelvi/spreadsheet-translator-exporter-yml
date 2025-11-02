@@ -13,7 +13,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     // PHP 8.1 rules
     $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_81,
+        LevelSetList::UP_TO_PHP_84,
         SetList::CODE_QUALITY,
         SetList::DEAD_CODE,
         SetList::TYPE_DECLARATION,
